@@ -1,4 +1,5 @@
 import React from 'react'
+import { BorderlessButton } from 'react-native-gesture-handler';
 import { HighlightCard } from '../../components/HighlightCard'
 import { TransactionCard, ITransactionCardData } from '../../components/TransactionCard'
 import * as S from './styled'
@@ -56,8 +57,9 @@ export function Dashboard() {
             </S.User>
           </S.UserInfo>
 
-          {/* @ts-ignore */}
-          <S.Icon name='power' />
+          <BorderlessButton>
+            <S.Icon name='power' />
+          </BorderlessButton>
         </S.UserWrapper>
       </S.Header>
 
