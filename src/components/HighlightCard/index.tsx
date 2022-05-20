@@ -28,7 +28,7 @@ export function HighlightCard({
       </S.Header>
 
       <S.Content>
-        <S.Amount type={type}>R$ {amount}</S.Amount>
+        <S.Amount type={type}>{amount}</S.Amount>
         <S.LastTransaction type={type}>{lastTransaction}</S.LastTransaction>
       </S.Content>
 
