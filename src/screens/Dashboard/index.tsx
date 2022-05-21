@@ -6,6 +6,7 @@ import { BorderlessButton } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components';
 import { HighlightCard } from '../../components/HighlightCard'
 import { TransactionCard, ITransactionCardData } from '../../components/TransactionCard'
+import { useAuth } from '../../hooks/auth';
 import * as S from './styled'
 
 export interface DataListProps extends ITransactionCardData {
@@ -24,19 +25,26 @@ interface HighlightData {
 }
 
 export function Dashboard() {
-  const dataKey = '@gofinance:transactions'
   const [isLoading, setIsLoading] = useState(true)
   const [transactions, setTransactions] = useState<DataListProps[]>([])
   const [highlightCardData, setHighlightCardData] = useState<HighlightData>({} as HighlightData)
 
+  const { signOut, user } = useAuth()
   const { colors } = useTheme()
+  const dataKey = `@gofinance:transactions_user:${user.id}`
 
   function getLastTransactionDate(
     collection: DataListProps[],
     type: 'positive' | 'negative'
   ) {
-    const lastTransaction = new Date(Math.max.apply(Math, collection
+    const collectionFiltered = collection
       .filter((transaction) => transaction.type === type)
+
+    if (collectionFiltered.length === 0) {
+      return 0
+    }
+
+    const lastTransaction = new Date(Math.max.apply(Math, collectionFiltered
       .map((transaction) => new Date(transaction.date).getTime())))
 
     return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString('pt-BR', { month: 'long' })}`
@@ -83,7 +91,9 @@ export function Dashboard() {
 
     const lastTransactionEntries = getLastTransactionDate(transactions, 'positive')
     const lastTransactionExpenses = getLastTransactionDate(transactions, 'negative')
-    const totalInterval = `01 a ${lastTransactionExpenses}`
+    const totalInterval = lastTransactionExpenses === 0
+      ? 'Não há movimentações'
+      : `01 a ${lastTransactionExpenses}`
 
     setHighlightCardData({
       entries: {
@@ -91,14 +101,18 @@ export function Dashboard() {
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
+        lastTransaction: lastTransactionEntries === 0
+          ? 'Não há transações'
+          : `Última entrada dia ${lastTransactionEntries}`,
       },
       expenses: {
         amount: expenses.toLocaleString('pt-BR', {
           style: 'currency',
           currency: 'BRL'
         }),
-        lastTransaction: `Última entrada saída ${lastTransactionExpenses}`,
+        lastTransaction: lastTransactionExpenses === 0
+          ? 'Não há transações'
+          : `Última entrada saída ${lastTransactionExpenses}`,
       },
       total: {
         amount: (entries - expenses).toLocaleString('pt-BR', {
@@ -132,16 +146,16 @@ export function Dashboard() {
             <S.Header>
               <S.UserWrapper>
                 <S.UserInfo>
-                  <S.Photo source={{ uri: 'https://avatars.githubusercontent.com/u/49215695?v=4' }} />
+                  <S.Photo source={{ uri: user.photo }} />
                   <S.User>
                     <S.UserGreeting>Olá, </S.UserGreeting>
-                    <S.UserName>Felipe</S.UserName>
+                    <S.UserName>{user.name}</S.UserName>
                   </S.User>
                 </S.UserInfo>
 
-                <BorderlessButton>
+                <S.LogoutButton onPress={signOut}>
                   <S.Icon name='power' />
-                </BorderlessButton>
+                </S.LogoutButton>
               </S.UserWrapper>
             </S.Header>
 

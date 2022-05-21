@@ -12,6 +12,7 @@ import * as S from './styled'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import uuid from 'react-native-uuid'
 import { useNavigation } from '@react-navigation/native'
+import { useAuth } from '../../hooks/auth'
 
 interface IFormData {
   [name: string]: any
@@ -36,6 +37,7 @@ export function Register() {
     key: 'category',
     name: 'Categoria',
   })
+  const { user } = useAuth()
 
   const {
     control,
@@ -79,7 +81,7 @@ export function Register() {
     }
 
     try {
-      const dataKey = '@gofinance:transactions'
+      const dataKey = `@gofinance:transactions_user:${user.id}`
 
       const data = await AsyncStorage.getItem(dataKey)
       const currentData = data ? JSON.parse(data) : []

@@ -56,9 +56,7 @@ export const UserName = styled.Text`
   font-family: ${({ theme: { fonts } }) => fonts.bold};
 `
 
-// export const LogoutButton = styled(BorderlessButton)`
-
-// `
+export const LogoutButton = styled.TouchableOpacity``
 
 //@ts-ignore
 export const Icon = styled(Feather)`
