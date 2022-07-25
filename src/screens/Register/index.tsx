@@ -48,7 +48,7 @@ export function Register() {
     resolver: yupResolver(schema)
   })
 
-  const { navigate } = useNavigation<INavigationProps>()
+  // const { navigate } = useNavigation<INavigationProps>()
 
   function handlTransactionTypeSelect(type: 'positive' | 'negative') {
     setTransactionType(type)
@@ -99,7 +99,7 @@ export function Register() {
         name: 'Categoria'
       })
 
-      navigate('Listagem')
+      // navigate('Listagem')
 
     } catch (err) {
       console.log(err)
@@ -149,6 +149,7 @@ export function Register() {
           </S.TransactionsTypes>
 
           <CategorySelectButton
+            testID='button-category'
             title={category.name}
             onPress={handleOpenSelectCategoryModal}
           />
@@ -160,7 +161,7 @@ export function Register() {
         />
       </S.Form>
 
-      <Modal visible={categoryModalOpen}>
+      <Modal testID='modal-category' visible={categoryModalOpen}>
         <CategorySelect
           category={category}
           setCategory={setCategory}

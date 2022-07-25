@@ -1,17 +1,19 @@
 import React from 'react'
+import { RectButtonProps } from 'react-native-gesture-handler'
 import * as S from './styled'
 
-interface ICategorySelectButtonProps {
+interface ICategorySelectButtonProps extends RectButtonProps{
   title: string
   onPress: () => void
 }
 
 export function CategorySelectButton({
   title,
-  onPress
+  onPress,
+  ...rest
 }: ICategorySelectButtonProps) {
   return (
-    <S.Container onPress={onPress}>
+    <S.Container onPress={onPress} {...rest}>
       <S.Category>
         {title}
       </S.Category>
